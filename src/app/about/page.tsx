@@ -6,7 +6,7 @@ const AboutPage = () => {
     <div className={styles.container}>
       <div className={styles.textContainer}>
         <h2 className={styles.subtitle}>What We Do</h2>
-        <h1 className={styles.title}>We creat digital ideas that are bigger, bolder, braver and better.</h1>
+        <h1 className={styles.title}>We create digital ideas that are bigger, bolder, braver and better.</h1>
         <p className={styles.desc}>We create digital ideas that are bigger, bolder, braver and better.
           We believe in good ideas flexibility and precision. We pride ourselves with delivering
           world class consulting and finance solutions to our clients. We also offer a wide range of

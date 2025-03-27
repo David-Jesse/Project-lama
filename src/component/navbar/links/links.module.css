@@ -1,0 +1,46 @@
+.links {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    gap: 10px;
+}
+
+.logout {
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--bg);
+    font-size: 14px;
+}
+
+.menuButton,
+.mobileLinks {
+  display: none
+}
+
+@media(max-width: 768px) {
+    .links {
+        display: none;
+    }
+
+    .menuButton {
+        display: block;
+        cursor: pointer;
+    }
+
+    .mobileLinks {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        background-color: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        z-index: 999;
+    }
+}

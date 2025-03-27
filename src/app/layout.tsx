@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from '@/component/navbar/Navbar';
+import Footer from "@/component/footer/Footer";
+import { connectToMongoDB } from "@/lib/db";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,10 +26,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  connectToMongoDB();
   return (
-    <html lang="en">
+    <html 
+    lang="en"
+    data-qb-extension-installed="true"
+    data-qb-installed="true"
+    suppressHydrationWarning={true}
+    >
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <div className='container'>
+          <Navbar />
+          {children}
+          <Footer />
+        </div>
+        
       </body>
     </html>
   );
