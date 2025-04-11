@@ -1,64 +1,100 @@
 import styles from './singlePost.module.css';
 import Image from 'next/image';
-import { getPost } from '@/lib/data';
-
+import { getPost } from '@/lib/data'
+import {Suspense} from 'react'
+import PostUser from '@/component/postuser/PostUser'
+import { Metadata } from 'next';
 
 interface Params {
   slug: string
 }
 
-// interface Post  {
-//     userid: number;
-//     id: number;
-//     // title: string;
-//     desc: string; 
-//     img?: string;
-// }
+interface Post {
+  title: string;
+  desc: string;
+}
 
+// Fetching data with an Api
+const getData = async (slug: string) => {
+  const res = await fetch(`http://localhost:3000/api/blog/${slug}`)
+  console.log(res)
 
-// const getData = async (slug: string): Promise<Post> => {
-//   const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${slug}`)
+  if(!res.ok) {
+    throw new Error('Something went wrong')
+  }  
+  return res.json();
+}
 
-//   if(!res.ok) {
-//     throw new Error('Something went wrong')
-//   }
+// Generate Metadata for individual Post
+export const generateMetadata = async ({params}: { params: Params }): Promise<Metadata> => {
+  const {slug} = params;
 
-//   return res.json();
-// }
+  try {
+    
+    const post: Post = await getPost(slug);    
 
-const SinglePostPage = async ({ params }: {params: Params}) => {
+    if (!post) {
+      return {
+        title: 'Post not found!',
+        description: 'The requested post could not be found!'
+      };
+    }
+
+    return {
+      title: post.title,
+      description: post.desc,
+      openGraph: {
+        title: post.title,
+        description: post.desc,
+        url: '/posts/${slug}',
+        type: 'article'
+      } 
+    }
+  } catch (error) {
+    console.error("Error generating metadata:", error)
+    return {
+      title: "error",
+      description: "There was an error loading this post"
+    }
+  }
+
+}
+
+const SinglePostPage = async ({params}: {params: Params}) => {
 
   const {slug} = params
   console.log('slug:', slug)
+
+  // Fetching data with an API
+  const post = await getData(slug);
   
-  const post = await getPost(slug)
-  console.log( 'Fetched post:', post)
+  // Fetching data without an API
+  // const post = await getPost(slug);
+  // console.log( 'Fetched post:', post)
 
   return (
     <div className={styles.container}>
-    {/* { post.img && 
+    {post.img && 
       <div className={styles.imgContainer}>
         <Image 
           src={post.img}
           alt='single post image' 
           fill 
           className={styles.img}
-          />
+        />
       </div>
-    } */}
+    }
       <div className={styles.textContainer}>
         <h1 className={styles.title}>{post.title}</h1>
         <div className={styles.detail}>
-          <Image 
-            className={styles.avatar}
-            src='https://images.pexels.com/photos/31033691/pexels-photo-31033691/free-photo-of-varanda-urbana-encantadora-com-vegetacao-exuberante.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'
-            alt='Avatar image'
-            width={50}
-            height={50}
-          />
+          {post && (
+            <Suspense fallback={<div>Loading...</div>}>
+              <PostUser userId={post.userId}/>
+            </Suspense>
+          )}
           <div className={styles.detailText}>
             <span className={styles.detailTitle}>Published</span>
-            <span className={styles.detailValue}>01.01.2025</span>
+            <span className={styles.detailValue}>{post.createdAt.toString().slice(0, 10)}</span>
           </div>
         </div>
         <div className={styles.content}>

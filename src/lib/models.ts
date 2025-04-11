@@ -1,12 +1,12 @@
-import mongoose, { Document, Schema, Types} from 'mongoose';
+import mongoose, { Document, Schema} from 'mongoose';
 
 export interface IUser extends Document {
-    name: string;
-    password: string;
+    username: string;
     img: string;
     isAdmin: boolean;
     createdAt: Date;
     updatedAt: Date;
+    userId: string
 }
 
 export interface IPost extends Document {
@@ -19,6 +19,33 @@ export interface IPost extends Document {
    updatedAt: Date;
 }
 
+// const customerSchema = new Schema({
+//     username: {
+//         type: String,
+//         required: true,
+//         unique: true,
+//         min: 3,
+//         maxlength: 20
+//     },
+//     img: {
+//         type: String,
+//         default: ''
+//     },
+//     userId: {
+//         type: String,
+//         required: true
+//     }, 
+//     isAdmin: {
+//         type: Boolean,
+//         default: false 
+//     },
+//     provider: {
+//         type: String,
+//         enum: ['credentials', 'github', 'google'],
+//         default: 'credentials'
+//     },
+// }, {timestamps: true})
+
 const userSchema = new Schema({
     username:{
         type: String, 
@@ -27,18 +54,22 @@ const userSchema = new Schema({
         min: 3,
         maxlength: 20
     },
-    password: {
-        type: String,
-        required: true,
-        minlength: 6
-    },
     img: {
         type: String,
         default: ''
     },
+    userId: {
+        type: String,
+        required: true, 
+    },
     isAdmin: {
         type: Boolean,
         default: false,
+    },
+    provider: {
+        type: String, 
+        enum: ['credentials', 'github', 'google'], 
+        default: 'credentials'
     },
 },  {timestamps: true})
 
@@ -56,8 +87,9 @@ const postSchema = new Schema({
         default: ''
     },
     userId: {
-        type: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref: 'User'
     },
     slug: {
         type: String,
@@ -65,6 +97,10 @@ const postSchema = new Schema({
         unique: true
     }
 },  {timestamps: true})
+
+if (mongoose.models.User) {
+    delete mongoose.models.User;
+}
 
 
 export const User = mongoose.models.User || mongoose.model('User', userSchema);

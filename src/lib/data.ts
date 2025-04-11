@@ -1,11 +1,10 @@
 import { connectToMongoDB } from './db';
 import {Post, User} from './models'
-//import { dbConnect } from './utils'
 
 
 export const getPosts = async () => {
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const posts = await Post.find()
         return posts;
     } catch (error) {
@@ -16,10 +15,12 @@ export const getPosts = async () => {
 
 export const getPost = async (slug: string)  => {
     try {
-        connectToMongoDB();
-        console.log('Querying for slug:', slug);
+        await connectToMongoDB();
+        console.log('Connected to mongodb')
+
         const post = await Post.findOne({slug})
         console.log('Query result:', post)
+        
         return post;
     } catch (error) {
         console.log(error)
@@ -28,8 +29,9 @@ export const getPost = async (slug: string)  => {
 }
 
 export const getUser = async (id: string) => {
+    
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const user = await User.findById(id)
         return user
     } catch (error) {

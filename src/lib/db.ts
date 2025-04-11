@@ -10,7 +10,7 @@ export async function connectToMongoDB() {
     try {
         const cnx = await mongoose.connect(process.env.MONGODB_URI as string)
         // Cached connection for future use
-        cachedConnection = cnx.connection;
+        cachedConnection = cnx.connection
         // log message indicating a new MongoDb connection
         console.log("New mongodb connection established")
         return cachedConnection;
