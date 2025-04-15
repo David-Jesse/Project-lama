@@ -1,26 +1,3 @@
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wrapper {
-    width: 500px;
-    background-color: var(--bgSoft);
-    padding: 50px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    gap: 30px;
-    border-radius: 5px;
-}
-
-.githubButton {
-    width: 50%;
-    padding: 20px;
-    font-size: 18px;
-}
-
 .form {
     display: flex;
     flex-direction: column;

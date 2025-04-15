@@ -66,10 +66,14 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    password: {
+        type: String,
+        required: false
+    },
     provider: {
         type: String, 
-        enum: ['credentials', 'github', 'google'], 
-        default: 'credentials'
+        enum: ['credentials', 'github'], 
+        required: true
     },
 },  {timestamps: true})
 

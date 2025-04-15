@@ -1,38 +1,42 @@
 "use client"
-import {handleGithubLogin, login} from '@/lib/action'
-import {useState} from 'react'
+
+import {handleGithubLogin} from '@/lib/action'
 import styles from './login.module.css'
+import LoginForm from '@/component/loginForm/LoginForm'
 
 const LoginPage = () => {
-  const [message, setMessage] = useState<{error?: string; success?: string} | null>(null)
+  //const [message, setMessage] = useState<{error?: string; success?: string} | null>(null)
 
-  const handleLogin = async (formData: FormData) => {
-    try {
-      const result = await login(formData)
-      if (result) {
-        setMessage(result)
-      } else {
-        setMessage({ error: 'An unexpected error occurred' })
-      }
+  // const handleLogin = async (formData: FormData) => {
+  //   try {
+  //     const result = await login(formData)
+  //     if (result) {
+  //       setMessage(result)
+  //     } else {
+  //       setMessage({ error: 'An unexpected error occurred' })
+  //     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setMessage({error: 'An unexpected error occurred'})
-    }
-  }
+  //   } catch (err) {
+  //     console.log(err)
+  //     setMessage({error: 'An unexpected error occurred'})
+  //   }
+  // }
   return (
     <div className={styles.container}>
-      <form action={handleGithubLogin} className={styles.githubForm}>
-        <button className={styles.githubButton}>Login with Github</button>
-      </form>
+      <div className={styles.wrapper}>
+        <form action={handleGithubLogin}>
+          <button className={styles.githubButton}>Login with Github</button>
+        </form>
 
-      <div className={styles.divider}>OR</div>
+        <LoginForm />
 
-      <form action={handleLogin}>
-        <input type="text" placeholder="username" name="username"/>
-        <input type="text" placeholder="password" name="password"/>
-        <button>Login with Credentials</button>
-      </form>
+        {/* {message?.error && (
+          <div className={styles.error}>{message.error}</div>
+        )}
+          {message?.success && (
+          <div className={styles.success}>{message.success}</div>
+        )} */}
+      </div>
     </div>
   )
 }

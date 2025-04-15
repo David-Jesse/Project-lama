@@ -9,7 +9,7 @@ import { SessionType } from '@/lib/auth';
 
 const links = [
     {
-        title: "homepage",
+        title: "Home",
         path: '/'
     },
     {
