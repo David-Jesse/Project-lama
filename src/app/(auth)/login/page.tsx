@@ -1,32 +1,24 @@
 "use client"
 
 import {handleGithubLogin} from '@/lib/action'
+import { handleGoogleLogin } from '@/lib/action'
 import styles from './login.module.css'
 import LoginForm from '@/component/loginForm/LoginForm'
 
 const LoginPage = () => {
-  //const [message, setMessage] = useState<{error?: string; success?: string} | null>(null)
 
-  // const handleLogin = async (formData: FormData) => {
-  //   try {
-  //     const result = await login(formData)
-  //     if (result) {
-  //       setMessage(result)
-  //     } else {
-  //       setMessage({ error: 'An unexpected error occurred' })
-  //     }
-
-  //   } catch (err) {
-  //     console.log(err)
-  //     setMessage({error: 'An unexpected error occurred'})
-  //   }
-  // }
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <form action={handleGithubLogin}>
-          <button className={styles.githubButton}>Login with Github</button>
-        </form>
+        <div className={styles.login}>
+          <form action={handleGithubLogin}>
+            <button className={styles.githubButton}>Login with Github</button>
+          </form>
+          <form action={handleGoogleLogin}>
+            <button className={styles.googleButton}>Login with Google</button>
+          </form>
+        </div>
+       
 
         <LoginForm />
 

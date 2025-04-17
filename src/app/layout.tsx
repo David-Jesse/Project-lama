@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Next.js 15 Homepage",
-    template: "%s | Next.js 15",
+    default: "Home",
+    template: "%s",
   }
 };
 

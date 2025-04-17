@@ -3,7 +3,7 @@ import styles from './about.module.css'
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About page",
+  title: "About",
   description: "About page description",
 };
 

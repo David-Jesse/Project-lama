@@ -33,8 +33,6 @@ export interface LinksProps {
 const Links = ({session}: LinksProps) => {
     const [open, setOpen] = useState(false);
 
-    
-
   return (
     <div className={styles.container}>
 
