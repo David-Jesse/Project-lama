@@ -81,7 +81,6 @@ export const {
             }
         }
     }),
-    Google
     ],
     callbacks: {
     async signIn({user, account, profile}) {

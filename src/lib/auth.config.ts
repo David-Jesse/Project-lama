@@ -23,6 +23,12 @@ export const authConfig: NextAuthConfig = {
            
             return session;
         },
+        async signIn({user, account, profile}) {
+            if (account?.provider === 'google') {
+                return true;
+            }
+            return true
+        },
         authorized ({auth, request}) {
             const user =  auth?.user;
             const isOnAdminPanel = request.nextUrl?.pathname.startsWith('/admin')

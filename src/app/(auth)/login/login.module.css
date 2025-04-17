@@ -17,7 +17,8 @@
 
 .login {
     display: flex;
-    flex-directon: column;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .githubButton {
