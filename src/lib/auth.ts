@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import {Session} from "next-auth"
 import { connectToMongoDB } from "./db"
+// Removed TokenEndpointRequest as it is not exported from 'next-auth/providers'
 import { User } from "./models"
 import bcrypt from "bcryptjs"
 import { authConfig } from "./auth.config"
@@ -47,12 +48,43 @@ export const {
     ...authConfig,
   providers: [
     GitHub({
-        clientId: process.env.GITHUB_ID, 
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        clientId: process.env.GITHUB_ID as string, 
+        clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }), 
     Google({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_SECRET
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_SECRET as string,
+        authorization: {
+            params: {
+                prompt: "consent",
+                access_type: "offline",
+                response_type: "code"
+            }
+        },
+        token: {
+            async request({client, params, checks, provider}) {
+                const response = await client.oauthcCallback(provider.callbackUrl, params, checks);
+                return {
+                    tokens: {
+                        access_token: String(response.access_token),
+                        expires_at: response.expires_at,
+                        refresh_token: response.refresh_token,
+                        token_type: response.token_type
+                    }
+                }
+            }
+        },
+        allowDangerousEmailAccountLinking: true,  // Allows the same email from different providers
+        profile (profile) {
+            console.log('Google profile:', profile);
+            return {
+                id: profile.sub,
+                name: profile.name,
+                email:profile.email,
+                image: profile.picture,
+                isAdmin: profile.isAdmin
+            }
+        }
     }),
     CredentialsProvider({
         name: 'credentials',
@@ -84,79 +116,126 @@ export const {
     ],
     callbacks: {
     async signIn({user, account, profile}) {
-        console.log('Github OAuth triggered!', {user, profile})
+        console.log('Github OAuth triggered!', {provider: account?.provider, user, profile})
         
         if (account?.provider !== "github") return true;
 
-        try {
-            await connectToMongoDB()
-            console.log("Connected to DB!")
+        if (account?.provider === 'github') {
+            try {
+                await connectToMongoDB()
+                console.log("Connected to DB!")
+                
+                if (!profile?.email || !profile?.login) {
+                    console.error("Missing required profile fields")
+                    return false;
+                }
+                // Check for existing user by email
+                let existingUser = await User.findOne({email: profile.email})
+    
+                if(existingUser) {
+                    console.log('Existing user found:', existingUser.email)
+                    // Update user profile if needed
+    
+                    if (existingUser.provider === 'github') {
+                        await User.updateOne(
+                            {_id: existingUser._id},
+                            {
+                                $set: {
+                                    img: profile.avatar_url || existingUser.img,
+                                    username: profile.login
+                                }
+                            }
+                        ).catch(err => {
+                            console.log("Username update failed, keeping existing username", err)
+                        })
+                    }
+                    return true;
+                }
+    
+                existingUser = await User.findOne({user: profile.login});
+                if (existingUser) {
+                    console.log('Existing user found by username: existingUser.username')
+                    return true;
+                }
+    
             
-            if (!profile?.email || !profile?.login) {
-                console.error("Missing required profile fields")
+                // Create new user if user doesn't exist
+                console.log("Creating new user with username:", profile.login)
+                const newUser = new User ({
+                    username: profile.login,
+                    email: profile.email,
+                    img: profile.avatar_url,
+                    password: profile.id,
+                    provider: 'github'
+                })
+    
+                await newUser.save()
+                console.log('New user created successfully')
+                return true;
+            } catch(err) {
+                console.error('Authentication error:', err)
+    
+                if  ((err as { code?: number })?.code === 11000) {
+                    console.log('Duplicate key detected, proceeding with login')
+    
+                    const conflictUser = await User.findOne({
+                        $or: [
+                            {email: profile?.email},
+                            {username: profile?.login}
+                        ]
+                    })
+    
+                    if (conflictUser)  return true;
+                }
+    
                 return false;
             }
-            // Check for existing user by email
-            let existingUser = await User.findOne({email: profile.email})
+        } else if (account?.provider === 'google') {
+            console.log("this is the account",account)
+            try {
 
-            if(existingUser) {
-                console.log('Existing user found:', existingUser.email)
-                // Update user profile if needed
+                await connectToMongoDB();
 
-                if (existingUser.provider === 'github') {
-                    await User.updateOne(
-                        {_id: existingUser._id},
-                        {
-                            $set: {
-                                img: profile.avatar_url || existingUser.img,
-                                username: profile.login
-                            }
-                        }
-                    ).catch(err => {
-                        console.log("Username update failed, keeping existing username", err)
-                    })
+                if (!profile?.email) {
+                    console.error('Missing email from google profile');
+                    return false;
                 }
+
+                const existingUser = await User.findOne({email: profile.email})
+
+                if (existingUser) {
+                    // Update Google user if needed
+                    if(existingUser.provider === 'google') {
+                        await User.updateOne(
+                            {_id: existingUser._id},
+                            {
+                                $set: {
+                                    img: profile.picture || existingUser.img,
+                                    username: profile.name || profile.email.split('@')[0]
+                                }
+                            }
+                        )
+                    }
+                    return true;
+                }
+
+                // Create new google user
+                const newUser = new User ({
+                    username: profile.name || profile.email.split('@')[0],
+                    email: profile.email,
+                    img: profile.img,
+                    provider: 'google'
+                });
+
+                await newUser.save()
                 return true;
+            } catch (err) {
+                console.error('Google auth error:', err)
+                return false;
             }
-
-            existingUser = await User.findOne({user: profile.login});
-            if (existingUser) {
-                console.log('Existing user found by username: existingUser.username')
-                return true;
-            }
-
-        
-            // Create new user if user doesn't exist
-            console.log("Creating new user with username:", profile.login)
-            const newUser = new User ({
-                username: profile.login,
-                email: profile.email,
-                img: profile.avatar_url,
-                password: profile.id,
-                provider: 'github'
-            })
-
-            await newUser.save()
-            console.log('New user created successfully')
-            return true;
-        } catch(err) {
-            console.error('Authentication error:', err)
-
-            if  ((err as { code?: number })?.code === 11000) {
-                console.log('Duplicate key detected, proceeding with login')
-
-                const conflictUser = await User.findOne({
-                    $or: [
-                        {email: profile?.email},
-                        {username: profile?.login}
-                    ]
-                })
-
-                if (conflictUser)  return true;
-            }
-
-            return false
         }
+
+        return false;
       },
       ...authConfig.callbacks,
     }

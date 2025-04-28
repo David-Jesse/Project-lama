@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
         hostname: "**.githubusercontent.com", // All github user content
       }
     ]
-  }
+  },
+  devIndicators: false
 };
 
 export default nextConfig;
