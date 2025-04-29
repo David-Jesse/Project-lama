@@ -3,7 +3,6 @@
 import {useState} from 'react'
 import styles from './links.module.css'
 import NavLink from '../navLink/NavLink'
-import Image from 'next/image';
 import { handleLogout } from '@/lib/action';
 import { SessionType } from '@/lib/auth';
 
@@ -33,6 +32,10 @@ export interface LinksProps {
 const Links = ({session}: LinksProps) => {
     const [open, setOpen] = useState(false);
 
+    const handleLinkClick = () => {
+        setOpen(false);
+    }
+
   return (
     <div className={styles.container}>
 
@@ -54,15 +57,27 @@ const Links = ({session}: LinksProps) => {
                 )
             }
         </div>
-        <Image src='/menu.png' alt='mobile menu icon' width={30} height={30} onClick={() => setOpen((prev) => !prev)} className={styles.menuButton}/>
-        {
-            open && <div className={styles.mobileLinks}>
-               { links.map((link) => (
-                <NavLink item={link} key={link.title}/>
-               ))}
+        <>
+            <button
+                className={`${styles.hamburger} ${open ? styles.active : ""}`}
+                onClick={() => setOpen(prev => !prev)}
+                aria-label={open ? "Close menu" : "Open menu"}
+            >
+                <span className={styles.bar}></span>
+                <span className={styles.bar}></span>
+                <span className={styles.bar}></span>
+            </button>
 
-            </div>
-        }
+            {open && (
+                <div className={styles.mobileLinks}>
+                    {links.map((link) => (
+                        <div onClick={handleLinkClick} key={link.title}>
+                            <NavLink item={link} />
+                        </div>
+                    ))}
+                </div>
+            )}
+        </>
     </div>
   )
 }

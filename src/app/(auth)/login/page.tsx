@@ -20,16 +20,7 @@ const LoginPage = () => {
             <GoogleSignInButton />
           </form>
         </div>
-       
-
         <LoginForm />
-
-        {/* {message?.error && (
-          <div className={styles.error}>{message.error}</div>
-        )}
-          {message?.success && (
-          <div className={styles.success}>{message.success}</div>
-        )} */}
       </div>
     </div>
   )

@@ -22,20 +22,6 @@ export const authConfig: NextAuthConfig = {
            
             return session;
         },
-        // async signIn({user, account, profile}) {
-        //     console.log(profile)
-        //     try{
-        //         if (account?.provider === 'google') {
-               
-        //             console.log("google sign in:", user.email)
-        //         }
-        //     } catch(error) {
-        //         console.error("Error in SignIn callback:", error)
-        //         return false;
-        //     }
-           
-        //     return true
-        // },
         authorized ({auth, request}) {
             const user =  auth?.user;
             const isOnAdminPanel = request.nextUrl?.pathname.startsWith('/admin')

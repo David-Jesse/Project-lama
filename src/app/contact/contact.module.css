@@ -7,13 +7,15 @@
 }
 
 .imgContainer {
-    flex: 1;
-    height: 500px;
-    position: relative
+    flex: 1; 
+    width: 100%;
+    object-fit: contain;
+    
 }
 
 .img {
     object-fit: contain;
+    width: 100%;
 }
 
 .form {
@@ -41,4 +43,16 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .imgContainer {
+        height: 300px;
+    }
 }

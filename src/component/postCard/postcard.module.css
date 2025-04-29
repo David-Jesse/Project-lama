@@ -41,3 +41,9 @@
 .link {
     text-decoration: underline;
 }
+
+@media(max-width: 378px) {
+    .container {
+        width: 100%;
+    }
+}

@@ -5,7 +5,6 @@ import { getUsers } from '@/lib/data'
 import Image from 'next/image';
 
 
-
 const AdminUsers = async () => {
 
   const users = await getUsers()
@@ -22,15 +21,21 @@ const AdminUsers = async () => {
                 height={50}
               />
               <span>{user.username}</span>
+              {user.admin && <span className={styles.adminBadge}>(Admin)</span>}
             </div>
-            <form action={deleteUser}>
-              <input type="hidden" name="id" value={user.id} />
-              <button className={styles.userButton}>Delete</button>
-            </form>
+            {!user.isAdmin ? (
+               <form action={deleteUser}>
+               <input type="hidden" name="id" value={user.id} />
+               <button className={styles.userButton}>Delete</button>
+             </form>
+            ): (
+              <div className={styles.protectedUser}>Protected</div>
+            )}
+           
           </div>
         ))}
     </div>
   )
 }
 
-export default AdminUsers
+export default AdminUsers;
