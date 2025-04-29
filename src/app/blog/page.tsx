@@ -32,8 +32,8 @@ const Blog = async () => {
 
   return (
     <div className={styles.container}>
-      {posts.map((post) => (
-        <div className={styles.post} key={post.id}>
+      {posts.map((post, id) => (
+        <div className={styles.post} key={post.id || id}>
           <PostCard post={post}/>
         </div>
       ))}

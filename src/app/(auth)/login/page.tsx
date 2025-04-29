@@ -4,6 +4,8 @@ import {handleGithubLogin} from '@/lib/action'
 import { handleGoogleLogin } from '@/lib/action'
 import styles from './login.module.css'
 import LoginForm from '@/component/loginForm/LoginForm'
+import GoogleSignInButton from '@/component/googleLoginbutton/GoogleSignInButton'
+import GithubSignInButton from '@/component/githubButton/GithubButton'
 
 const LoginPage = () => {
 
@@ -12,10 +14,10 @@ const LoginPage = () => {
       <div className={styles.wrapper}>
         <div className={styles.login}>
           <form action={handleGithubLogin}>
-            <button className={styles.githubButton}>Login with Github</button>
+            <GithubSignInButton />
           </form>
           <form action={handleGoogleLogin}>
-            <button className={styles.googleButton}>Login with Google</button>
+            <GoogleSignInButton />
           </form>
         </div>
        

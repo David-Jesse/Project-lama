@@ -33,6 +33,7 @@ export const getUser = async (id: string) => {
     try {
         await connectToMongoDB();
         const user = await User.findById(id)
+        console.log(user)
         return user
     } catch (error) {
         console.log(error)
