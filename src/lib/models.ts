@@ -19,33 +19,6 @@ export interface IPost extends Document {
    updatedAt: Date;
 }
 
-// const customerSchema = new Schema({
-//     username: {
-//         type: String,
-//         required: true,
-//         unique: true,
-//         min: 3,
-//         maxlength: 20
-//     },
-//     img: {
-//         type: String,
-//         default: ''
-//     },
-//     userId: {
-//         type: String,
-//         required: true
-//     }, 
-//     isAdmin: {
-//         type: Boolean,
-//         default: false 
-//     },
-//     provider: {
-//         type: String,
-//         enum: ['credentials', 'github', 'google'],
-//         default: 'credentials'
-//     },
-// }, {timestamps: true})
-
 const userSchema = new Schema({
     username:{
         type: String, 
@@ -75,6 +48,13 @@ const userSchema = new Schema({
         enum: ['credentials', 'github'], 
         required: true
     },
+    email: {
+        type: String,
+        required: false,
+        unique: true,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 },  {timestamps: true})
 
 const postSchema = new Schema({

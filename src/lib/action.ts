@@ -219,3 +219,20 @@ export const login = async (prevState: string | undefined, formData: FormData) =
         throw error;
     }
 }
+
+//types
+
+export interface ResetPasswordToken {
+    id: string;
+    email: string;
+    token: string;
+    expires: Date;
+    used: boolean;
+}
+
+// user interface
+export interface User {
+    id: string;
+    email: string;
+    password: string;
+}
