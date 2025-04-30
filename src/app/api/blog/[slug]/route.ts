@@ -2,13 +2,17 @@ import {connectToMongoDB} from '@/lib/db'
 import {Post} from '@/lib/models'
 import {NextRequest, NextResponse} from 'next/server'
 
-
+type Params = {
+    params: {
+        slug: string;
+    }
+}
 
 export async function GET (
     request: NextRequest,
-    {params}: {params: {slug: string}}
+    context: Params
 ) {
-    const {slug} = params 
+    const {slug} = context.params
 
     try{
         connectToMongoDB()
