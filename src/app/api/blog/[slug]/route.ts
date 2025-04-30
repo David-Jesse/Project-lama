@@ -1,8 +1,13 @@
 import {connectToMongoDB} from '@/lib/db'
 import {Post} from '@/lib/models'
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 
-export const GET = async (request: Request, {params}: {params: {slug: string}}) => {
+
+
+export async function GET (
+    request: NextRequest,
+    {params}: {params: {slug: string}}
+) {
     const {slug} = params 
 
     try{
@@ -16,6 +21,8 @@ export const GET = async (request: Request, {params}: {params: {slug: string}}) 
         throw new Error('Failed to fetch Post!')
     }
 }
+    
+
 
 export const DELETE = async (request: Request, {params}: {params: {slug: string}}) => {
     const {slug} = params 
