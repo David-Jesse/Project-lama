@@ -21,13 +21,14 @@ export async function GET (
         throw new Error('Failed to fetch Post!')
     }
 }
+
+export async function DELETE (
+    request: NextRequest,
+    {params}: {params: {slug: string}}
+) {
+    const {slug} = params
     
-
-
-export const DELETE = async (request: Request, {params}: {params: {slug: string}}) => {
-    const {slug} = params 
-
-    try{
+    try {
         connectToMongoDB()
 
         await Post.deleteOne({slug})
@@ -37,4 +38,22 @@ export const DELETE = async (request: Request, {params}: {params: {slug: string}
         console.log(err)
         throw new Error('Post deleted!')
     }
+        
 }
+    
+
+
+// export const DELETE = async (request: Request, {params}: {params: {slug: string}}) => {
+//     const {slug} = params 
+
+//     try{
+//         connectToMongoDB()
+
+//         await Post.deleteOne({slug})
+//         return NextResponse.json("Post Deleted");
+
+//     } catch(err) {
+//         console.log(err)
+//         throw new Error('Post deleted!')
+//     }
+// }
