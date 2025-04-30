@@ -33,9 +33,9 @@ export async function GET (
 
 export async function DELETE (
     request: NextRequest,
-    {params}: {params: {slug: string}}
+    context: {params: {slug: string}}
 ) {
-    const {slug} = params
+    const {slug} = context.params
     
     try {
         connectToMongoDB()
