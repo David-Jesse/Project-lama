@@ -2,27 +2,32 @@ import {connectToMongoDB} from '@/lib/db'
 import {Post} from '@/lib/models'
 import {NextRequest, NextResponse} from 'next/server'
 
-type Params = {
-    params: {
-        slug: string;
-    }
-}
 
 export async function GET (
     request: NextRequest,
-    context: Params
+    {params}: {params: {slug: string}}
 ) {
-    const {slug} = context.params
+    const {slug} = params
 
     try{
-        connectToMongoDB()
+        await connectToMongoDB()
 
         const post = await Post.findOne({slug})
-        return NextResponse.json(post);
+        
+        if(!post) {
+            return NextResponse.json(
+                {error: 'Post not found!'},
+                {status: 404}
+            )
+        }
 
+        return NextResponse.json(post)
     } catch(err) {
         console.log(err)
-        throw new Error('Failed to fetch Post!')
+        return NextResponse.json(
+            {error: 'Failed to fetch post!'},
+            {status: 500}
+        )
     }
 }
 
@@ -34,13 +39,23 @@ export async function DELETE (
     
     try {
         connectToMongoDB()
+        const result = await Post.deleteOne({slug})
 
-        await Post.deleteOne({slug})
-        return NextResponse.json("Post Deleted");
+        if(result.deletedCount === 0) {
+            return NextResponse.json(
+                {error: 'Post not found!'},
+                {status: 404}
+            )
+        }
+
+        return NextResponse.json({message: 'Post deleted successfully!'});
 
     } catch(err) {
-        console.log(err)
-        throw new Error('Post deleted!')
+        console.error(err)
+        return NextResponse.json(
+            {error: 'Failed to delete post!'},
+            {status: 500}
+        )
     }
         
 }
