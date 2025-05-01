@@ -8,7 +8,7 @@ interface Params {
 
 export async function GET(
     request: NextRequest,
-    {params}: {params: Params}
+    {params}: {params: {slug: string}}
 ) {
     const {slug} = params
 
@@ -36,7 +36,7 @@ export async function GET(
 
 export async function DELETE(
     request: NextRequest,
-    {params}: {params: Params}
+    {params}: {params: {slug: string}}
 ) {
     const {slug} = params 
 
