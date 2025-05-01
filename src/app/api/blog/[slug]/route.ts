@@ -23,9 +23,9 @@ export default async function handler (
 
     switch (req.method) {
         case 'GET':
-            return handleGET(req, res, slug as string)
+            return GET(req, res, slug as string)
         case 'DELETE':
-            return handleDELETE(req, res, slug as string)
+            return DELETE(req, res, slug as string)
         default:
             return res.status(405).json({error: 'Method not allowed'})
     }
@@ -33,7 +33,7 @@ export default async function handler (
 
 
 // Get post by slug
-async function handleGET (
+async function GET (
     req: NextApiRequest,
     res: NextApiResponse<ResponeseData>,
     slug: string 
@@ -53,7 +53,7 @@ async function handleGET (
 }
 
 // Delete post by slug
-async function handleDELETE (
+async function DELETE (
     req: NextApiRequest,
     res: NextApiResponse<ResponeseData>,
     slug: string 
