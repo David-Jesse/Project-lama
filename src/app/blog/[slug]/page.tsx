@@ -5,9 +5,9 @@ import {Suspense} from 'react'
 import PostUser from '@/component/postuser/PostUser'
 import { Metadata } from 'next';
 
-interface Params {
-  slug: string
-}
+// interface Params {
+//   slug: string
+// }
 
 interface Post {
   title: string;
@@ -25,8 +25,8 @@ const getData = async (slug: string) => {
 }
 
 // Generate Metadata for individual Post
-export const generateMetadata = async ({params}: {params: Params}): Promise<Metadata> => {
-  const {slug} = params;
+export const generateMetadata = async ({params}: {params: Promise<{slug: string}>}): Promise<Metadata> => {
+  const {slug} = await params;
 
   try {  
     const post: Post = await getPost(slug);    
@@ -58,9 +58,9 @@ export const generateMetadata = async ({params}: {params: Params}): Promise<Meta
 
 }
 
-const SinglePostPage = async ({params}: {params: Params}) => {
+const SinglePostPage = async ({params}: {params: Promise<{slug: string}>}) => {
 
-  const {slug} = params
+  const {slug} = await params
   console.log('slug:', slug)
 
   // Fetching data with an API
