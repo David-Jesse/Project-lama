@@ -4,7 +4,6 @@ import Google from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import {Session} from "next-auth"
 import { connectToMongoDB } from "./db"
-// Removed TokenEndpointRequest as it is not exported from 'next-auth/providers'
 import { User } from "./models"
 import bcrypt from "bcryptjs"
 import { authConfig } from "./auth.config"
@@ -62,8 +61,32 @@ export const {
             }
         },
         token: {
-            async request({client, params, checks, provider}) {
-                const response = await client.oauthcCallback(provider.callbackUrl, params, checks);
+            async request({
+                client, 
+                params, 
+                checks, 
+                provider
+            } : {
+                client: {
+                    oauthCallback: (
+                        callbackUrl: string,
+                        params: Record<string, string>,
+                        checks: Record<string, string>
+                    ) => Promise<{
+                        access_token: string | number;
+                        expires_at: number | null;
+                        refresh_token: string | null;
+                        token_type: string
+                    }>
+                }
+                params: Record<string, string>;
+                checks: Record<string, string>;
+                provider: {
+                    callbackUrl: string;
+                    [key: string]: unknown;
+                }
+            }) {
+                const response = await client.oauthCallback(provider.callbackUrl, params, checks);
                 return {
                     tokens: {
                         access_token: String(response.access_token),
