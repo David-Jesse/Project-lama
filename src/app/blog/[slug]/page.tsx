@@ -5,9 +5,14 @@ import {Suspense} from 'react'
 import PostUser from '@/component/postuser/PostUser'
 import { Metadata } from 'next';
 
-interface Params {
-  slug: string
+type Props = {
+  params: {slug: string}
+  searchParams?: {[key: string]: string | string[] | undefined}
 }
+
+// interface Params {
+//   slug: string
+// }
 
 interface Post {
   title: string;
@@ -17,7 +22,6 @@ interface Post {
 // Fetching data with an Api
 const getData = async (slug: string) => {
   const res = await fetch(`http://localhost:3000/api/blog/${slug}`)
-  console.log(res)
 
   if(!res.ok) {
     throw new Error('Something went wrong')
@@ -26,11 +30,10 @@ const getData = async (slug: string) => {
 }
 
 // Generate Metadata for individual Post
-export const generateMetadata = async ({params}: { params: Params }): Promise<Metadata> => {
+export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
   const {slug} = params;
 
-  try {
-    
+  try {  
     const post: Post = await getPost(slug);    
 
     if (!post) {
@@ -60,7 +63,7 @@ export const generateMetadata = async ({params}: { params: Params }): Promise<Me
 
 }
 
-const SinglePostPage = async ({params}: {params: Params}) => {
+const SinglePostPage = async ({params}: Props) => {
 
   const {slug} = params
   console.log('slug:', slug)

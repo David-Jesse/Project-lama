@@ -2,15 +2,9 @@ import {connectToMongoDB} from '@/lib/db'
 import {Post} from '@/lib/models'
 import {NextRequest, NextResponse} from 'next/server'
 
-interface PageProps {
-    params: {
-        slug: string
-    }
-}
-
 export async function GET(
     request: NextRequest,
-    {params}: PageProps
+    {params}: {params: {slug: string}}
 ) {
     const {slug} = params
 
@@ -38,7 +32,7 @@ export async function GET(
 
 export async function DELETE(
     request: NextRequest,
-    {params}: PageProps
+    {params}: {params: {slug: string}}
 ) {
     const {slug} = params 
 
