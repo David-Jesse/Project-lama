@@ -35,7 +35,7 @@ export async function DELETE(
     request: NextRequest,
     {params}: {params: Promise<{slug: string}>}
 ) {
-    const {slug} = params 
+    const {slug} = await params 
 
     try {
         await connectToMongoDB();
