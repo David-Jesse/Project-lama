@@ -21,6 +21,7 @@ interface PostsProps  {
     body: string; 
     img: string
     slug: string
+    createdAt: Date | string;
   }
 }
 

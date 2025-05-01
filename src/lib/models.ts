@@ -79,7 +79,11 @@ const postSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 },  {timestamps: true})
 
 if (mongoose.models.User) {

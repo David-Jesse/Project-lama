@@ -12,18 +12,26 @@ interface PostsProps  {
     body: string; 
     img: string;
     slug: string;
-
+    createdAt: Date | string;
   }
 }
 
 const PostCard = ({post}: PostsProps) => {
+
+  const postDate = new Date(post.createdAt); 
+
+  const formattedDate = postDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
   return (
     <div className={styles.container}>
         <div className={styles.top}>
           {post.img && <div className={styles.imgContainer}>
                 <Image src={post.img} alt='' fill className={styles.img}/>
             </div>}
-            <span className={styles.date}>01.01.2024</span>
+            <span className={styles.date}>{formattedDate}</span>
         </div>
         <div className={styles.bottom}>
             <h1 className={styles.title}>{post.title}</h1>
