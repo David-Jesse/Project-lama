@@ -2,11 +2,15 @@ import {connectToMongoDB} from '@/lib/db'
 import {Post} from '@/lib/models'
 import {NextRequest, NextResponse} from 'next/server'
 
+interface Params {
+    slug: string
+}
+
 export async function GET(
     request: NextRequest,
-    {params}: {params: Promise<{slug: string}>}
+    {params}: {params: Params}
 ) {
-    const {slug} = await params
+    const {slug} = params
 
     try {
         await connectToMongoDB();
@@ -32,9 +36,9 @@ export async function GET(
 
 export async function DELETE(
     request: NextRequest,
-    {params}: {params: Promise<{slug: string}>}
+    {params}: {params: Params}
 ) {
-    const {slug} = await params 
+    const {slug} = params 
 
     try {
         await connectToMongoDB();
