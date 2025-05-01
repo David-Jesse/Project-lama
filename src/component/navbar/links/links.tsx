@@ -22,7 +22,7 @@ const links = [
     {
         title: "Blog",
         path: '/blog'
-    }
+    },
 ]
 
 export interface LinksProps {
@@ -75,6 +75,23 @@ const Links = ({session}: LinksProps) => {
                             <NavLink item={link} />
                         </div>
                     ))}
+
+                    {session?.user ? (
+                        <>
+                            {session.user?.isAdmin && (
+                                <div onClick={handleLinkClick}>
+                                    <NavLink item={{title: "Admin", path: "/admin"}}/>
+                                </div>
+                            )}
+                            <form action={handleLogout}>
+                                <button className={styles.logout} onClick={handleLinkClick}>Logout</button>
+                            </form>
+                        </>
+                    ) : (
+                        <div onClick={handleLinkClick}>
+                            <NavLink item={{title: "login", path: "/login"}}/>
+                        </div>
+                    )}
                 </div>
             )}
         </>
