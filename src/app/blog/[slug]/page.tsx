@@ -5,14 +5,9 @@ import {Suspense} from 'react'
 import PostUser from '@/component/postuser/PostUser'
 import { Metadata } from 'next';
 
-type Props = {
-  params: {slug: string}
-  searchParams?: {[key: string]: string | string[] | undefined}
+interface Params {
+  slug: string
 }
-
-// interface Params {
-//   slug: string
-// }
 
 interface Post {
   title: string;
@@ -30,7 +25,7 @@ const getData = async (slug: string) => {
 }
 
 // Generate Metadata for individual Post
-export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
+export const generateMetadata = async ({params}: {params: Params}): Promise<Metadata> => {
   const {slug} = params;
 
   try {  
@@ -63,7 +58,7 @@ export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
 
 }
 
-const SinglePostPage = async ({params}: Props) => {
+const SinglePostPage = async ({params}: {params: Params}) => {
 
   const {slug} = params
   console.log('slug:', slug)
