@@ -33,7 +33,7 @@ const userSchema = new Schema({
     },
     userId: {
         type: String,
-        required: true, 
+        required: false, 
     },
     isAdmin: {
         type: Boolean,
