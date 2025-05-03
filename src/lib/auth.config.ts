@@ -6,6 +6,20 @@ export const authConfig: NextAuthConfig = {
         error: '/login' // redirect to Login on auth errors
     },
     providers: [],
+    cookies: {
+        csrfToken: {
+            name: process.env.NODE_ENV === "production"
+            ? "__Host-next-auth.csrf-token"
+            : "next-auth.csrf-token",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production"
+
+            }
+        }
+    },
     callbacks: {
         async jwt({token, user}) {
             if(user) {
@@ -49,4 +63,6 @@ export const authConfig: NextAuthConfig = {
             return true;
         }
     },
+    useSecureCookies: process.env.NODE_ENV === 'production',
+    debug: process.env.NODE_ENV === "development"
 };

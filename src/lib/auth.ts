@@ -7,7 +7,6 @@ import { connectToMongoDB } from "./db"
 import { User } from "./models"
 import bcrypt from "bcryptjs"
 import { authConfig } from "./auth.config"
-
 interface CredentialsProps {
     username: string
     password: string
@@ -38,6 +37,7 @@ const login = async (credentials: CredentialsProps) => {
     }
    
 }
+
  
 export const { 
     auth, 
